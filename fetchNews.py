@@ -2,6 +2,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from newsapi import NewsApiClient
 import datetime
 
+
 def getnews(term):
     today = datetime.date.today()
     daysAgo = datetime.timedelta(days=3)
@@ -20,15 +21,11 @@ def getnews(term):
     return data
 
 
-def sentiment():
-    data = getnews()
+def sentiment(term):
+    data = getnews(term)
     analyzer = SentimentIntensityAnalyzer()
     for sentence in data:
         if sentence["content"] is not None:
             vs = analyzer.polarity_scores(sentence["content"])
             sentence["polarity"] = vs
     return data
-
-
-
-
