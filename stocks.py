@@ -1,5 +1,6 @@
 import pandas_datareader
 import re
+import datetime
 
 result = pandas_datareader.nasdaq_trader.get_nasdaq_symbols(retry_count=3, timeout=30, pause=None)
 
@@ -19,4 +20,10 @@ def autoComplete(search):
     return match
 
 
+def getStockData(stock):
+    data = pandas_datareader.DataReader(stock, data_source="yahoo", start="2013-01-01", end=datetime.date.today())
+    closingPrice=[]
+    for i in range(0, len(data)):
+        closingPrice.append(float(data.iloc[i,3]))
+    return closingPrice
 

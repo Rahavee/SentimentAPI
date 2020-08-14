@@ -34,5 +34,15 @@ def search(term):
     return {"status": "OK", "content": stocks.autoComplete(term)}
 
 
+@app.route("/closingPrice/<stock>")
+def closingPrice(stock):
+    return {"status": "OK", "from": "2013-01-01", "stock": stock, "content": stocks.getStockData(stock)}
+
+
+@app.route("/allData/<term>")
+def allData(term):
+    return {"news": news(term), "tweets": tweets(term), "scarper": data(term), "closing price": closingPrice(term)}
+
+
 if __name__ == '__main__':
     app.run()
