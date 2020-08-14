@@ -2,6 +2,7 @@ from flask import Flask
 import fetchNews
 import fetchTweets
 import scraper
+import stocks
 
 app = Flask(__name__)
 
@@ -21,10 +22,16 @@ def tweets(term):
     return {"status": "OK", "content": fetchTweets.run(term)}
 
 
-@app.route("/data")
-def data():
-    return {"status": "OK", "percentageShares": scraper.getPercentageShares(),
-            "topInvestors": scraper.getTopInvesters(), "topMutualFunds": scraper.getTopMutualFunds()}
+@app.route("/data/<term>")
+def data(term):
+    soup = scraper.getWebpage(term)
+    return {"status": "OK", "percentageShares": scraper.getPercentageShares(soup),
+            "topInvestors": scraper.getTopInvesters(soup), "topMutualFunds": scraper.getTopMutualFunds(soup)}
+
+
+@app.route("/search/<term>")
+def search(term):
+    return {"status": "OK", "content": stocks.autoComplete(term)}
 
 
 if __name__ == '__main__':

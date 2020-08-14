@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import re
 
 
-def getWebpage():
+def getWebpage(term):
     headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
@@ -12,24 +12,23 @@ def getWebpage():
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
     }
 
-    url = "https://money.cnn.com/quote/shareholders/shareholders.html?symb=NCLH&subView=institutional"
+    url = "https://money.cnn.com/quote/shareholders/shareholders.html?symb={}&subView=institutional".format(term)
     req = requests.get(url, headers)
     soup = BeautifulSoup(req.content, 'html.parser')
     return soup
 
 
-def getPercentageShares():
-    soup = getWebpage()
-    shares = soup.find_all(class_="wsod_quoteDataPoint")
+def getPercentageShares(soup):
+    shares = soup.select("#wsod_institutionalTextAndPie table:nth-of-type(1) td")
     percentageShares = []
-    for i in shares:
-        percentageShares.append(re.match("[0-9,.]*", i.text).group())
+    for i in range(0,6,2):
+        percentageShares.append({"name":shares[i].text,"percent":re.match("[0-9,.,a-z,A-Z]*", shares[i+1].text).group()})
 
     return percentageShares
 
 
-def getTopInvesters():
-    soup = getWebpage()
+
+def getTopInvesters(soup):
     names = soup.select("#wsod_shareholders table:nth-of-type(2) td:nth-child(1) span")
     stake = soup.select("#wsod_shareholders table:nth-of-type(2) .wsod_aRight:nth-child(2) ")
     investors = []
@@ -39,8 +38,7 @@ def getTopInvesters():
     return investors
 
 
-def getTopMutualFunds():
-    soup = getWebpage()
+def getTopMutualFunds(soup):
     names = soup.select("#wsod_shareholders table:nth-of-type(3) td:nth-child(1) span")
     stake = soup.select("#wsod_shareholders table:nth-of-type(3) .wsod_aRight:nth-child(2) ")
     mutualFunds = []
@@ -50,4 +48,3 @@ def getTopMutualFunds():
     return mutualFunds
 
 
-print(getTopMutualFunds())
