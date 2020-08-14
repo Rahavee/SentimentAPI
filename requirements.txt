@@ -57,6 +57,7 @@ pyparsing==2.4.2
 pytest==5.2.0
 python-dateutil==2.8.1
 pytz==2019.3
+pywin32==225
 PyYAML==5.1.2
 regex==2020.7.14
 requests==2.24.0
@@ -82,5 +83,6 @@ wcwidth==0.1.7
 Werkzeug==0.16.0
 xlrd==1.2.0
 XlsxWriter==1.2.2
+xlwings==0.16.0
 zipp==0.6.0
 zope.interface==5.1.0
