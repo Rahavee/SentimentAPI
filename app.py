@@ -44,4 +44,4 @@ def allData(term):
     return {"news": news(term), "tweets": tweets(term), "scarper": data(term), "closing price": closingPrice(term)}
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, port=80)
