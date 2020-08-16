@@ -2,7 +2,7 @@ import pandas_datareader
 import re
 import datetime
 
-file = open("stock.txt", "r")
+file = open("./stock.txt", "r")
 result = []
 for i in range(0, 17996):
     result.append(re.search(".*", file.readline()).group())
