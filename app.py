@@ -3,6 +3,7 @@ import fetchNews
 import fetchTweets
 import scraper
 import stocks
+import os
 
 app = Flask(__name__)
 
