@@ -43,5 +43,5 @@ def closingPrice(stock):
 def allData(term):
     return {"news": news(term), "tweets": tweets(term), "scarper": data(term), "closing price": closingPrice(term)}
 
-
-app.run(debug=True, port=33507)
+if __name__ == '__main__':
+    app.run()
