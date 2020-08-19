@@ -29,4 +29,3 @@ def getStockData(stock):
         closingPrice.append({"x": dates[i], "y": float(data.iloc[i, 3])})
     return closingPrice
 
-print(getStockData("NCLH"))
