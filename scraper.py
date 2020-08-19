@@ -12,8 +12,7 @@ def asyncFunc(term):
     url = ["https://money.cnn.com/quote/profile/profile.html?symb={}".format(term),
            "https://money.cnn.com/quote/shareholders/shareholders.html?symb={}&subView=institutional".format(term)]
     rs = (grequests.get(u) for u in url)
-    res = grequests.imap(rs, grequests.Pool(2))
-    print(res)
+    res = grequests.map(rs)
     soup = []
     for r in res:
         soup.append(BeautifulSoup(r.text, "html.parser"))
@@ -21,9 +20,7 @@ def asyncFunc(term):
 
 
 def getPercentageShares(soup):
-
     shares = soup.select("#wsod_institutionalTextAndPie table:nth-of-type(1) td")
-    print(shares)
     percentageShares = []
     for i in range(0, 6, 2):
         percentageShares.append(
