@@ -23,10 +23,9 @@ def autoComplete(search):
 
 
 def getStockData(stock):
-    data = pandas_datareader.DataReader(stock, data_source="yahoo", start="2013-01-01", end=datetime.date.today())
+    data = pandas_datareader.DataReader(stock, data_source="yahoo", start="2017-01-01", end=datetime.date.today())
     closingPrice = []
     for i in range(0, len(data)):
-        closingPrice.append(float(data.iloc[i, 3]))
+        closingPrice.append({"date":data.iloc[i,0], "price" :float(data.iloc[i, 3])})
     return closingPrice
 
-print(autoComplete("AAP"))
