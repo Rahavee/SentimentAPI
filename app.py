@@ -30,7 +30,7 @@ def tweets(term):
 def data(term):
     soup = scraper.getWebpage(term)
     return {"status": "OK", "percentageShares": scraper.getPercentageShares(soup),
-            "topInvestors": scraper.getTopInvesters(soup), "topMutualFunds": scraper.getTopMutualFunds(soup)}
+            "topInvestors": scraper.getTopInvesters(soup), "topMutualFunds": scraper.getTopMutualFunds(soup),"desc":scraper.info(term)}
 
 
 @app.route("/search/<term>")
