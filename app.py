@@ -3,8 +3,12 @@ import fetchNews
 import fetchTweets
 import scraper
 import stocks
+from flask_cors import CORS
+import os
 
 app = Flask(__name__)
+CORS(app)
+app.debug = True
 
 
 @app.route('/')
