@@ -1,9 +1,13 @@
+from gevent import monkey as curious_george
+curious_george.patch_all(thread=False, select=False)
 from flask import Flask
 import fetchNews
 import fetchTweets
 import scraper
 import stocks
+import grequests
 from flask_cors import CORS
+
 import os
 
 app = Flask(__name__)
@@ -28,9 +32,9 @@ def tweets(term):
 
 @app.route("/data/<term>")
 def data(term):
-    soup = scraper.getWebpage(term)
-    return {"status": "OK", "percentageShares": scraper.getPercentageShares(soup),
-            "topInvestors": scraper.getTopInvesters(soup), "topMutualFunds": scraper.getTopMutualFunds(soup),"desc":scraper.info(term)}
+    soup = scraper.asyncFunc(term)
+    return {"status": "OK", "percentageShares": scraper.getPercentageShares(soup[1]),
+            "topInvestors": scraper.getTopInvesters(soup[1]), "topMutualFunds": scraper.getTopMutualFunds(soup[1]),"desc":scraper.info(soup[0])}
 
 
 @app.route("/search/<term>")
@@ -44,7 +48,9 @@ def closingPrice(stock):
 
 
 @app.route("/allData/<term>")
+
 def allData(term):
+
     return {"news": news(term), "tweets": tweets(term), "scarper": data(term), "closing price": closingPrice(term)}
 
 if __name__ == '__main__':

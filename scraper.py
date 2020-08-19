@@ -1,31 +1,33 @@
-import requests
+from gevent import monkey as curious_george
+
+curious_george.patch_all(thread=False, select=False)
+import grequests
 from bs4 import BeautifulSoup
 import re
 
 
-def getWebpage(term):
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '3600',
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
-    }
 
-    url = "https://money.cnn.com/quote/shareholders/shareholders.html?symb={}&subView=institutional".format(term)
-    req = requests.get(url, headers)
-    soup = BeautifulSoup(req.content, 'html.parser')
+
+def asyncFunc(term):
+    url = ["https://money.cnn.com/quote/profile/profile.html?symb={}".format(term),
+           "https://money.cnn.com/quote/shareholders/shareholders.html?symb={}&subView=institutional".format(term)]
+    rs = (grequests.get(u) for u in url)
+    res = grequests.imap(rs, grequests.Pool(2))
+    print(res)
+    soup = []
+    for r in res:
+        soup.append(BeautifulSoup(r.text, "html.parser"))
     return soup
 
 
 def getPercentageShares(soup):
     shares = soup.select("#wsod_institutionalTextAndPie table:nth-of-type(1) td")
     percentageShares = []
-    for i in range(0,6,2):
-        percentageShares.append({"name":shares[i].text,"percent":re.match("[0-9,.,a-z,A-Z]*", shares[i+1].text).group()})
+    for i in range(0, 6, 2):
+        percentageShares.append(
+            {"name": shares[i].text, "percent": re.match("[0-9,.,a-z,A-Z]*", shares[i + 1].text).group()})
 
     return percentageShares
-
 
 
 def getTopInvesters(soup):
@@ -47,18 +49,11 @@ def getTopMutualFunds(soup):
 
     return mutualFunds
 
-def info(term):
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '3600',
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
-    }
 
-    url = "https://money.cnn.com/quote/profile/profile.html?symb={}".format(term)
-    req = requests.get(url, headers)
-    soup = BeautifulSoup(req.content, 'html.parser')
+def info(soup):
+
     desc = soup.select("#wsod_companyDescription")
     return desc[0].text
+
+
 
