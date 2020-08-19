@@ -21,8 +21,9 @@ def asyncFunc(term):
 
 
 def getPercentageShares(soup):
-    print(soup)
+
     shares = soup.select("#wsod_institutionalTextAndPie table:nth-of-type(1) td")
+    print(shares)
     percentageShares = []
     for i in range(0, 6, 2):
         percentageShares.append(
