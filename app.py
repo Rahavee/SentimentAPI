@@ -32,10 +32,12 @@ def tweets(term):
 
 @app.route("/data/<term>")
 def data(term):
-    soup = scraper.asyncFunc(term)
-    return {"status": "OK", "percentageShares": scraper.getPercentageShares(soup[1]),
-            "topInvestors": scraper.getTopInvesters(soup[1]), "topMutualFunds": scraper.getTopMutualFunds(soup[1]),"desc":scraper.info(soup[0])}
-
+    try:
+        soup = scraper.asyncFunc(term)
+        return {"status": "OK", "percentageShares": scraper.getPercentageShares(soup[1]),
+                "topInvestors": scraper.getTopInvesters(soup[1]), "topMutualFunds": scraper.getTopMutualFunds(soup[1]),"desc":scraper.info(soup[0])}
+    except Exception:
+        return{ "status": "error"}
 
 @app.route("/search/<term>")
 def search(term):
@@ -44,7 +46,10 @@ def search(term):
 
 @app.route("/closingPrice/<stock>")
 def closingPrice(stock):
-    return {"status": "OK", "from": "2013-01-01", "stock": stock, "content": stocks.getStockData(stock)}
+    try:
+        return {"status": "OK", "from": "2013-01-01", "stock": stock, "content": stocks.getStockData(stock)}
+    except Exception:
+        return{"status":"error"}
 
 
 @app.route("/allData/<term>")
